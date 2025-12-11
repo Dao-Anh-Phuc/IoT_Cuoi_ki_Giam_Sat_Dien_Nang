@@ -1,63 +1,68 @@
 #include <Arduino.h>
 
+// Config & Secrets
+#include "config.h"
+#include "topics.h"
 #include "secrets/wifi.h"
+#include "secrets/mqtt.h"
+
+// Network
 #include "wifi_connect.h"
 #include <WiFiClientSecure.h>
-
 #include "ca_cert_emqx.h"
-#include "secrets/mqtt.h"
 #include <PubSubClient.h>
 #include "MQTT.h"
 
+// Libraries
 #include <Ticker.h>
-
-#include <DHT.h>
+#include <Wire.h>
+#include <Adafruit_SHT31.h>
 #include <PZEM004Tv30.h>
 #include <LiquidCrystal_I2C.h>
-#include <Wire.h>
-
-#define DHT22PIN 13U
-#define LED_RESET_PIN 5U     // ✅ SỬA: LED báo hiệu reset energy
-#define RELAY_PIN 17U
-#define BUTTON_PIN 23U 
 
 namespace
 {
+    // WiFi & MQTT
     const char *ssid = WiFiSecrets::ssid;
     const char *password = WiFiSecrets::pass;
-    const char *client_id = (String("esp32-client") + WiFi.macAddress()).c_str();
+    String client_id_string;
+    const char *client_id;
 
-    DHT dht(DHT22PIN, DHT22);
-    PZEM004Tv30 pzem(Serial2, 26, 27);
-    
-    LiquidCrystal_I2C lcd(0x27, 16, 2);
+    // Hardware Objects
+    Adafruit_SHT31 sht31 = Adafruit_SHT31();
+    PZEM004Tv30 pzem(Serial2, PZEM_RX, PZEM_TX);
+    LiquidCrystal_I2C lcd(LCD_I2C_ADDR, 16, 2);
     
     WiFiClientSecure tlsClient;
     PubSubClient mqttClient(tlsClient);
 
+    // Tickers
     Ticker dhtTicker;
     Ticker pzemTicker;
     Ticker lcdTicker;
-    Ticker ledBlinkTicker;  // ✅ THÊM: Timer cho LED nhấp nháy
+    Ticker ledBlinkTicker;
+    Ticker systemInfoTicker;
     
+    // State Variables
     bool relayState = false;
-    
-    // ✅ THÊM: LED reset indicator variables
     bool ledResetActive = false;
     int ledBlinkCount = 0;
-    const int LED_BLINK_TOTAL = 6;  // Nhấp nháy 3 lần (6 transitions)
     
-    // Button variables
     bool lastButtonState = HIGH;
     bool currentButtonState = HIGH;
     unsigned long lastDebounceTime = 0;
-    unsigned long debounceDelay = 50;
     
-    // LCD display variables
     int lcdDisplayMode = 0;
     unsigned long lastLcdUpdate = 0;
-    unsigned long lcdUpdateInterval = 3000;
     
+    unsigned long relay_on_time = 0;
+    unsigned long relay_off_time = 0;
+    unsigned long last_state_change = 0;
+    bool last_relay_state = false;
+    
+    int currentSystemInfoIndex = 0;
+    
+    // Display Data Struct
     struct DisplayData {
         float voltage = 0.0f;
         float current = 0.0f;
@@ -70,29 +75,25 @@ namespace
         bool relayState = false;
         bool dataValid = false;
     } displayData;
-    
-    // DHT Topics
-    const char *temperature_topic = "home/temperature";
-    const char *humidity_topic = "home/humidity";
-    
-    // PZEM Topics
-    const char *voltage_topic = "home/voltage";
-    const char *current_topic = "home/current";
-    const char *power_topic = "home/power";
-    const char *energy_topic = "home/energy";
-    const char *frequency_topic = "home/frequency";
-    const char *pf_topic = "home/powerfactor";
-    
-    // PZEM Reset Topics
-    const char *pzem_reset_topic = "home/pzem/reset";
-    const char *pzem_status_topic = "home/pzem/status";
-
-    // Relay Topics
-    const char *relay_control_topic = "home/relay/control";
-    const char *relay_status_topic = "home/relay/status";
 }
 
-// ✅ THÊM: Function LED nhấp nháy khi reset
+// Function Prototypes
+void ledBlinkCallback();
+void startLedResetIndicator();
+void publishSystemInfoByIndex();
+void updateRelayStats();
+void publishRelayStats();
+void updateLCD();
+void dhtReadPublish();
+void pzemReadPublish();
+void controlRelay(bool state);
+void toggleRelay();
+void resetPzemEnergy();
+void handleButton();
+void mqttCallback(char *topic, uint8_t *payload, unsigned int length);
+void scanI2C();
+
+// LED Blink Callback (cho PZEM reset indicator)
 void ledBlinkCallback()
 {
     if (ledBlinkCount < LED_BLINK_TOTAL) {
@@ -100,27 +101,126 @@ void ledBlinkCallback()
         ledBlinkCount++;
     } else {
         ledBlinkTicker.detach();
-        digitalWrite(LED_RESET_PIN, LOW);  // Tắt LED
+        digitalWrite(LED_RESET_PIN, LOW);
         ledResetActive = false;
         ledBlinkCount = 0;
     }
 }
 
-// ✅ THÊM: Function bật LED khi bắt đầu reset
 void startLedResetIndicator()
 {
     ledResetActive = true;
     ledBlinkCount = 0;
-    digitalWrite(LED_RESET_PIN, HIGH);  // Bật LED
-    ledBlinkTicker.attach_ms(300, ledBlinkCallback);  // Nhấp nháy mỗi 300ms
+    digitalWrite(LED_RESET_PIN, HIGH);
+    ledBlinkTicker.attach_ms(LED_BLINK_INTERVAL, ledBlinkCallback);
 }
 
+// Scan I2C Devices (Debug)
+void scanI2C()
+{
+    Serial.println("🔍 Scanning I2C bus...");
+    byte count = 0;
+    
+    for (byte i = 8; i < 120; i++)
+    {
+        Wire.beginTransmission(i);
+        if (Wire.endTransmission() == 0)
+        {
+            Serial.print("   Found device at 0x");
+            if (i < 16) Serial.print("0");
+            Serial.print(i, HEX);
+            
+            // Identify known devices
+            if (i == LCD_I2C_ADDR) Serial.print(" (LCD)");
+            if (i == SHT31_I2C_ADDR) Serial.print(" (SHT31)");
+            if (i == 0x3F) Serial.print(" (LCD alt)");
+            if (i == 0x45) Serial.print(" (SHT31 alt)");
+            
+            Serial.println();
+            count++;
+        }
+    }
+    
+    if (count == 0) {
+        Serial.println("   No I2C devices found!");
+        Serial.printf("   Check wiring: SDA=GPIO%d, SCL=GPIO%d\n", SHT31_SDA, SHT31_SCL);
+    } else {
+        Serial.printf("   Total: %d device(s) found\n", count);
+    }
+}
+
+// Publish System Info (Rotated by Ticker)
+void publishSystemInfoByIndex()
+{
+    if (!mqttClient.connected()) {
+        return;
+    }
+    
+    switch (currentSystemInfoIndex) {
+        case 0: {
+            int rssi = WiFi.RSSI();
+            bool ok = mqttClient.publish(MQTTTopics::SYSTEM_RSSI, String(rssi).c_str(), false);
+            Serial.printf("%s RSSI: %d dBm\n", ok ? "✅" : "❌", rssi);
+            break;
+        }
+        case 1: {
+            String ip = WiFi.localIP().toString();
+            bool ok = mqttClient.publish(MQTTTopics::SYSTEM_IP, ip.c_str(), true);
+            Serial.printf("%s IP: %s\n", ok ? "✅" : "❌", ip.c_str());
+            break;
+        }
+        case 2: {
+            unsigned long uptime = millis() / 1000;
+            bool ok = mqttClient.publish(MQTTTopics::SYSTEM_UPTIME, String(uptime).c_str(), false);
+            Serial.printf("%s Uptime: %lu seconds\n", ok ? "✅" : "❌", uptime);
+            break;
+        }
+        case 3: {
+            float heap = ESP.getFreeHeap() / 1024.0;
+            bool ok = mqttClient.publish(MQTTTopics::SYSTEM_HEAP, String(heap, 1).c_str(), false);
+            Serial.printf("%s Heap: %.1f KB\n", ok ? "✅" : "❌", heap);
+            break;
+        }
+    }
+    
+    currentSystemInfoIndex = (currentSystemInfoIndex + 1) % 4;
+}
+
+// Update Relay Statistics
+void updateRelayStats()
+{
+    unsigned long current_time = millis();
+    unsigned long duration = current_time - last_state_change;
+    
+    if (last_relay_state) {
+        relay_on_time += duration;
+    } else {
+        relay_off_time += duration;
+    }
+    
+    last_state_change = current_time;
+}
+
+// Publish Relay Statistics
+void publishRelayStats()
+{
+    if (mqttClient.connected())
+    {
+        String stats = "ON:" + String(relay_on_time / 1000) + 
+                      ",OFF:" + String(relay_off_time / 1000);
+        bool success = mqttClient.publish(MQTTTopics::RELAY_STATS, stats.c_str(), false);
+        Serial.printf("%s Relay Stats: %s\n", 
+                     success ? "✅" : "❌", stats.c_str());
+    }
+}
+
+// Update LCD Display (Rotates through 3 screens)
 void updateLCD()
 {
     lcd.clear();
     
     switch (lcdDisplayMode) {
-        case 0:  // Màn 1: Voltage + Current
+        case 0: // Voltage & Current
             lcd.setCursor(0, 0);
             lcd.print("V:");
             lcd.print(displayData.voltage, 1);
@@ -136,7 +236,7 @@ void updateLCD()
             lcd.print("A");
             break;
             
-        case 1:  // Màn 2: Power + Energy
+        case 1: // Power & Energy
             lcd.setCursor(0, 0);
             lcd.print("P:");
             lcd.print(displayData.power, 1);
@@ -148,7 +248,7 @@ void updateLCD()
             lcd.print("kWh");
             break;
             
-        case 2:  // Màn 3: Frequency + PF + Temperature
+        case 2: // Frequency, PF, Temp, Humidity
             lcd.setCursor(0, 0);
             lcd.print("F:");
             lcd.print(displayData.frequency, 1);
@@ -170,36 +270,34 @@ void updateLCD()
             break;
     }
     
-    if (millis() - lastLcdUpdate >= lcdUpdateInterval) {
+    if (millis() - lastLcdUpdate >= LCD_DISPLAY_CHANGE_INTERVAL) {
         lcdDisplayMode = (lcdDisplayMode + 1) % 3;
         lastLcdUpdate = millis();
     }
 }
 
+// Read & Publish SHT31 Data
 void dhtReadPublish()
 {
-    float temperature = dht.readTemperature();
-    float humidity = dht.readHumidity();
+    float temperature = sht31.readTemperature();
+    float humidity = sht31.readHumidity();
 
     if (isnan(temperature) || isnan(humidity))
     {
-        Serial.println("Failed to read from DHT sensor!");
+        Serial.println("Failed to read from SHT31 sensor!");
         return;
     }
 
-    Serial.print("Temperature: ");
-    Serial.print(temperature);
-    Serial.print("°C, Humidity: ");
-    Serial.print(humidity);
-    Serial.println("%");
+    Serial.printf("Temperature: %.1f°C, Humidity: %.1f%%\n", temperature, humidity);
 
     displayData.temperature = temperature;
     displayData.humidity = humidity;
 
-    mqttClient.publish(temperature_topic, String(temperature).c_str(), false);
-    mqttClient.publish(humidity_topic, String(humidity).c_str(), false);
+    mqttClient.publish(MQTTTopics::TEMPERATURE, String(temperature, 1).c_str(), false);
+    mqttClient.publish(MQTTTopics::HUMIDITY, String(humidity, 1).c_str(), false);
 }
 
+// Read & Publish PZEM Data
 void pzemReadPublish()
 {
     float voltage = pzem.voltage();
@@ -218,87 +316,68 @@ void pzemReadPublish()
     displayData.dataValid = !isnan(voltage) && !isnan(current);
 
     if (!isnan(voltage)) {
-        Serial.print("Voltage: "); 
-        Serial.print(voltage); 
-        Serial.println("V");
-        mqttClient.publish(voltage_topic, String(voltage, 1).c_str(), false);
-    } else {
-        Serial.println("Error reading voltage");
+        Serial.printf("Voltage: %.1fV\n", voltage);
+        mqttClient.publish(MQTTTopics::VOLTAGE, String(voltage, 1).c_str(), false);
     }
 
     if (!isnan(current)) {
-        Serial.print("Current: "); 
-        Serial.print(current); 
-        Serial.println("A");
-        mqttClient.publish(current_topic, String(current, 3).c_str(), false);
-    } else {
-        Serial.println("Error reading current");
+        Serial.printf("Current: %.3fA\n", current);
+        mqttClient.publish(MQTTTopics::CURRENT, String(current, 3).c_str(), false);
     }
 
     if (!isnan(power)) {
-        Serial.print("Power: "); 
-        Serial.print(power); 
-        Serial.println("W");
-        mqttClient.publish(power_topic, String(power, 1).c_str(), false);
-    } else {
-        Serial.println("Error reading power");
+        Serial.printf("Power: %.1fW\n", power);
+        mqttClient.publish(MQTTTopics::POWER, String(power, 1).c_str(), false);
     }
 
     if (!isnan(energy)) {
-        Serial.print("Energy: "); 
-        Serial.print(energy, 3); 
-        Serial.println("kWh");
-        mqttClient.publish(energy_topic, String(energy, 3).c_str(), false);
-    } else {
-        Serial.println("Error reading energy");
+        Serial.printf("Energy: %.3fkWh\n", energy);
+        mqttClient.publish(MQTTTopics::ENERGY, String(energy, 3).c_str(), false);
     }
 
     if (!isnan(frequency)) {
-        Serial.print("Frequency: "); 
-        Serial.print(frequency, 1); 
-        Serial.println("Hz");
-        mqttClient.publish(frequency_topic, String(frequency, 1).c_str(), false);
-    } else {
-        Serial.println("Error reading frequency");
+        Serial.printf("Frequency: %.1fHz\n", frequency);
+        mqttClient.publish(MQTTTopics::FREQUENCY, String(frequency, 1).c_str(), false);
     }
 
     if (!isnan(pf)) {
-        Serial.print("PF: "); 
-        Serial.println(pf);
-        mqttClient.publish(pf_topic, String(pf, 2).c_str(), false);
-    } else {
-        Serial.println("Error reading power factor");
+        Serial.printf("PF: %.2f\n", pf);
+        mqttClient.publish(MQTTTopics::POWER_FACTOR, String(pf, 2).c_str(), false);
     }
 
     Serial.println("─────────────────");
 }
 
+// Control Relay
 void controlRelay(bool state)
 {
+    updateRelayStats();
+    
     relayState = state;
     displayData.relayState = state;
-    digitalWrite(RELAY_PIN, relayState ? LOW : HIGH);
+    digitalWrite(RELAY_PIN, relayState ? LOW : HIGH); // Active LOW
     
-    mqttClient.publish(relay_status_topic, relayState ? "ON" : "OFF", true);
+    mqttClient.publish(MQTTTopics::RELAY_STATUS, relayState ? "ON" : "OFF", true);
+    
+    String event = String(relayState ? "ON" : "OFF");
+    mqttClient.publish(MQTTTopics::RELAY_EVENT, event.c_str(), false);
+    
+    last_relay_state = relayState;
 
-    Serial.print("🔌 Relay: ");
-    Serial.print(relayState ? "ON" : "OFF");
-    Serial.print(" (Pin level: ");
-    Serial.print(relayState ? "LOW" : "HIGH");
-    Serial.println(")");
+    Serial.printf("Relay: %s\n", relayState ? "ON" : "OFF");
 }
 
+// Toggle Relay
 void toggleRelay()
 {
     controlRelay(!relayState);
 }
 
-// ✅ SỬA: Reset PZEM với LED indicator
+// Reset PZEM Energy
 void resetPzemEnergy()
 {
-    Serial.println("🔄 Resetting PZEM energy...");
+    Serial.println("Resetting PZEM energy...");
     
-    // ✅ BẬT LED báo hiệu reset
     startLedResetIndicator();
     
     lcd.clear();
@@ -311,9 +390,9 @@ void resetPzemEnergy()
     bool success = pzem.resetEnergy();
     
     if (success) {
-        Serial.println("✅ PZEM energy reset successful");
-        mqttClient.publish(pzem_status_topic, "RESET_SUCCESS", false);
-        mqttClient.publish(energy_topic, "0.000", false);
+        Serial.println("PZEM energy reset successful");
+        mqttClient.publish(MQTTTopics::PZEM_STATUS, "RESET_SUCCESS", false);
+        mqttClient.publish(MQTTTopics::ENERGY, "0.000", false);
         
         lcd.clear();
         lcd.setCursor(0, 0);
@@ -324,8 +403,8 @@ void resetPzemEnergy()
         
         displayData.energy = 0.0f;
     } else {
-        Serial.println("❌ PZEM energy reset failed");
-        mqttClient.publish(pzem_status_topic, "RESET_FAILED", false);
+        Serial.println("PZEM energy reset failed");
+        mqttClient.publish(MQTTTopics::PZEM_STATUS, "RESET_FAILED", false);
         
         lcd.clear();
         lcd.setCursor(0, 0);
@@ -336,6 +415,7 @@ void resetPzemEnergy()
     }
 }
 
+// Handle Button Press (with debounce)
 void handleButton()
 {
     bool reading = digitalRead(BUTTON_PIN);
@@ -344,12 +424,12 @@ void handleButton()
         lastDebounceTime = millis();
     }
     
-    if ((millis() - lastDebounceTime) > debounceDelay) {
+    if ((millis() - lastDebounceTime) > BUTTON_DEBOUNCE_DELAY) {
         if (reading != currentButtonState) {
             currentButtonState = reading;
             
             if (currentButtonState == LOW) {
-                Serial.println("🔘 Hardware button pressed - Resetting PZEM energy");
+                Serial.println("Button pressed - Resetting energy");
                 resetPzemEnergy();
             }
         }
@@ -358,20 +438,17 @@ void handleButton()
     lastButtonState = reading;
 }
 
+// MQTT Callback
 void mqttCallback(char *topic, uint8_t *payload, unsigned int length)
 {
-    // ✅ XÓA: LED brightness control (không dùng nữa)
+    char command[length + 1];
+    memcpy(command, payload, length);
+    command[length] = '\0';
     
-    // Relay control
-    if (strcmp(topic, relay_control_topic) == 0)
+    Serial.printf("MQTT Message: %s → %s\n", topic, command);
+    
+    if (strcmp(topic, MQTTTopics::RELAY_CONTROL) == 0)
     {
-        char command[length + 1];
-        memcpy(command, payload, length);
-        command[length] = '\0';
-        
-        Serial.print("📱 Relay command received: ");
-        Serial.println(command);
-        
         if (strcmp(command, "ON") == 0 || strcmp(command, "1") == 0) {
             controlRelay(true);
         }
@@ -381,111 +458,156 @@ void mqttCallback(char *topic, uint8_t *payload, unsigned int length)
         else if (strcmp(command, "TOGGLE") == 0) {
             toggleRelay();
         }
-        else {
-            Serial.println("❌ Invalid relay command");
-        }
     }
-    
-    // PZEM Reset control
-    else if (strcmp(topic, pzem_reset_topic) == 0)
+    else if (strcmp(topic, MQTTTopics::PZEM_RESET) == 0)
     {
-        char command[length + 1];
-        memcpy(command, payload, length);
-        command[length] = '\0';
-        
-        Serial.print("📱 PZEM reset command: ");
-        Serial.println(command);
-        
-        if (strcmp(command, "RESET") == 0 || strcmp(command, "reset") == 0) {
+        if (strcmp(command, "RESET") == 0 || strcmp(command, "reset") == 0 || 
+            strcmp(command, "RESET_ENERGY") == 0) {
             resetPzemEnergy();
-        }
-        else if (strcmp(command, "RESET_ENERGY") == 0) {
-            resetPzemEnergy();
-        }
-        else {
-            Serial.println("❌ Invalid PZEM reset command");
-            Serial.println("💡 Valid commands: RESET, RESET_ENERGY");
         }
     }
 }
 
+// SETUP
 void setup()
 {
     Serial.begin(115200);
     delay(10);
     
-    Serial.println("🚀 ESP32 IoT System Starting...");
-    Serial.println("⚡ PZEM using Serial2 (RX=GPIO26, TX=GPIO27)");
-    Serial.println("🔧 Debug using Serial (USB)");
+    Serial.println("\n\nESP32 IoT System Starting...");
+    Serial.println("════════════════════════════════════════");
+    Serial.printf("Core: %d, CPU: %dMHz\n", xPortGetCoreID(), ESP.getCpuFreqMHz());
+    Serial.printf("Flash: %dMB, Free Heap: %.1fKB\n", 
+                  ESP.getFlashChipSize() / 1024 / 1024, 
+                  ESP.getFreeHeap() / 1024.0);
+    Serial.printf("SDK: %s\n", ESP.getSdkVersion());
+    Serial.println("════════════════════════════════════════");
     
-    // Khởi tạo LCD
+    // Hardware Init
+    Wire.begin(SHT31_SDA, SHT31_SCL);
+    Serial.printf("I2C initialized (SDA=GPIO%d, SCL=GPIO%d)\n", SHT31_SDA, SHT31_SCL);
+    
+    // Scan I2C Bus
+    scanI2C();
+    
+    // SHT31 Init
+    if (!sht31.begin(SHT31_I2C_ADDR)) {
+        Serial.printf("SHT31 not found at 0x%02X\n", SHT31_I2C_ADDR);
+    } else {
+        Serial.printf("SHT31 sensor found at 0x%02X\n", SHT31_I2C_ADDR);
+    }
+    
+    // LCD Init
     lcd.init();
     lcd.backlight();
     lcd.clear();
-    
     lcd.setCursor(0, 0);
     lcd.print("ESP32 IoT System");
     lcd.setCursor(0, 1);
     lcd.print("Starting...");
+    Serial.printf("LCD initialized at 0x%02X\n", LCD_I2C_ADDR);
     delay(2000);
     
-    // ✅ Setup pins
-    pinMode(LED_RESET_PIN, OUTPUT);      // LED báo reset
+    // GPIO Init
+    pinMode(LED_RESET_PIN, OUTPUT);
     pinMode(RELAY_PIN, OUTPUT);
     pinMode(BUTTON_PIN, INPUT_PULLUP);
     
-    // ✅ Khởi tạo LED tắt
     digitalWrite(LED_RESET_PIN, LOW);
-    
-    // Khởi tạo relay OFF
-    digitalWrite(RELAY_PIN, HIGH);
+    digitalWrite(RELAY_PIN, HIGH); // Active LOW - OFF
     relayState = false;
     displayData.relayState = false;
+    last_relay_state = false;
+    last_state_change = millis();
     
-    Serial.println("🔌 Relay initialized: OFF (HIGH level - active LOW)");
-    Serial.println("💡 LED Reset Indicator: GPIO5");
-    Serial.println("🔘 Reset button: GPIO23 (Press to reset energy)");
+    Serial.println("Relay: OFF (active LOW)");
+    Serial.printf("LED Reset: GPIO%d\n", LED_RESET_PIN);
+    Serial.printf("Button: GPIO%d\n", BUTTON_PIN);
+    Serial.printf("PZEM: Serial2 (RX=GPIO%d, TX=GPIO%d)\n", PZEM_RX, PZEM_TX);
     
+    // WiFi Setup
+    Serial.println("════════════════════════════════════════");
     setup_wifi(ssid, password);
+    
+    // MQTT Setup
+    client_id_string = "esp32-" + WiFi.macAddress();
+    client_id_string.replace(":", "");
+    client_id = client_id_string.c_str();
+    
+    Serial.println("════════════════════════════════════════");
+    Serial.printf(" MQTT Client ID: %s\n", client_id);
+    
     tlsClient.setCACert(ca_cert);
-
     mqttClient.setCallback(mqttCallback);
     mqttClient.setServer(EMQX::broker, EMQX::port);
+    mqttClient.setBufferSize(MQTT_BUFFER_SIZE);
+    mqttClient.setKeepAlive(MQTT_KEEPALIVE);
     
-    // Setup timers
-    dhtTicker.attach(2, dhtReadPublish);
-    pzemTicker.attach(3, pzemReadPublish);
-    lcdTicker.attach_ms(500, updateLCD);
+    Serial.printf("MQTT Buffer: %d bytes\n", MQTT_BUFFER_SIZE);
+    Serial.printf("MQTT Keepalive: %ds\n", MQTT_KEEPALIVE);
     
-    Serial.println("✅ System ready!");
-    Serial.println("💡 Controls:");
-    Serial.println("   - MQTT: home/relay/control → ON/OFF/TOGGLE");
-    Serial.println("   - MQTT: home/pzem/reset → RESET");
-    Serial.println("   - Hardware: Press button GPIO23");
-    Serial.println("   - LCD: Auto-rotating display every 3s");
-    Serial.println("   - LED: Blinks 3 times when resetting energy");
+    // Start Tickers
+    dhtTicker.attach_ms(DHT_READ_INTERVAL, dhtReadPublish);
+    pzemTicker.attach_ms(PZEM_READ_INTERVAL, pzemReadPublish);
+    lcdTicker.attach_ms(LCD_UPDATE_INTERVAL, updateLCD);
+    systemInfoTicker.attach_ms(SYSTEM_INFO_INTERVAL, publishSystemInfoByIndex);
+    
+    Serial.println("════════════════════════════════════════");
+    Serial.println("Ticker Intervals:");
+    Serial.printf("   SHT31: %dms\n", DHT_READ_INTERVAL);
+    Serial.printf("   PZEM: %dms\n", PZEM_READ_INTERVAL);
+    Serial.printf("   LCD: %dms\n", LCD_UPDATE_INTERVAL);
+    Serial.printf("   System Info: %dms\n", SYSTEM_INFO_INTERVAL);
+    Serial.printf("   Relay Stats: %dms\n", RELAY_STATS_INTERVAL);
+    
+    Serial.println("════════════════════════════════════════");
+    Serial.println("System ready!");
+    Serial.println("MQTT Topics:");
+    Serial.println("   System: home/system/* (mqtt, rssi, ip, uptime, heap)");
+    Serial.println("   Relay:  home/relay/* (control, status, event, stats)");
+    Serial.println("   Sensors: home/* (temperature, humidity, voltage, etc.)");
+    Serial.println("════════════════════════════════════════\n");
     
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("SYSTEM READY");
     lcd.setCursor(0, 1);
-    lcd.print("Relay: OFF");
+    lcd.print("Connecting MQTT");
     delay(1000);
 }
 
+// MAIN LOOP
 void loop()
 {
-    // ✅ SỬA: Chỉ còn 2 topics (bỏ LED_brightness_topic)
     const char *subscribe_topics[] = {
-        relay_control_topic,
-        pzem_reset_topic
+        MQTTTopics::RELAY_CONTROL,
+        MQTTTopics::PZEM_RESET
     };
     
-    MQTT::reconnect(mqttClient, client_id, EMQX::username, EMQX::password, 
-                   subscribe_topics, 2);  // ✅ Chỉ 2 topics
+    MQTT::reconnectWithLWT(
+        mqttClient, 
+        client_id, 
+        EMQX::username, 
+        EMQX::password,
+        subscribe_topics, 
+        2,
+        MQTTTopics::MQTT_STATUS,
+        MQTTTopics::MQTT_LWT,
+        MQTTTopics::MQTT_ONLINE
+    );
     
     mqttClient.loop();
     handleButton();
+    
+    MQTT::heartbeat(mqttClient, MQTTTopics::MQTT_STATUS, MQTTTopics::MQTT_ONLINE);
+    checkWiFiConnection();
+    
+    // Relay Stats (every 60s)
+    static unsigned long lastStatsPublish = 0;
+    if (mqttClient.connected() && (millis() - lastStatsPublish > RELAY_STATS_INTERVAL)) {
+        lastStatsPublish = millis();
+        publishRelayStats();
+    }
     
     delay(10);
 }

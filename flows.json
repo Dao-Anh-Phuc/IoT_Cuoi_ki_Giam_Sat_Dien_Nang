@@ -1,0 +1,1679 @@
+[
+    {
+        "id": "4351e83dd79a08c7",
+        "type": "tab",
+        "label": "Monitoring ",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "08d6fb8f6833d65d",
+        "type": "tab",
+        "label": "Device Controls",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6bb65482c629c10d",
+        "type": "tab",
+        "label": "Status Feedback",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ac470317e4cc03c6",
+        "type": "tab",
+        "label": "TAB1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "245eca1353001914",
+        "type": "tls-config",
+        "name": "EMQX CA Cert",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "emqxsl-ca.crt",
+        "servername": "ebf27028.ala.asia-southeast1.emqxsl.com",
+        "verifyservercert": true,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "3e3ad694990ba6a9",
+        "type": "mqtt-broker",
+        "name": "Phuc_MQTT Broker",
+        "broker": "ebf27028.ala.asia-southeast1.emqxsl.com",
+        "port": "8883",
+        "tls": "245eca1353001914",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "21b6b89367d1044d",
+        "type": "ui_tab",
+        "name": "PZE Reading",
+        "icon": "dashboard",
+        "order": 3,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "f3d644dd796e599e",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-custom",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "reset": false
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#4B7930",
+                    "value": "#4B7930",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#212121",
+                    "edited": true
+                },
+                "page-backgroundColor": {
+                    "value": "#121212",
+                    "edited": true
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#1e1e1e",
+                    "edited": true
+                },
+                "group-textColor": {
+                    "value": "#f4f4f4",
+                    "edited": true
+                },
+                "group-borderColor": {
+                    "value": "#424242",
+                    "edited": true
+                },
+                "group-backgroundColor": {
+                    "value": "#2e2e2e",
+                    "edited": true
+                },
+                "widget-textColor": {
+                    "value": "#ffffff",
+                    "edited": true
+                },
+                "widget-backgroundColor": {
+                    "value": "#00bcd4",
+                    "edited": true
+                },
+                "widget-borderColor": {
+                    "value": "#2e2e2e",
+                    "edited": true
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "0db4acb5f4f3254d",
+        "type": "ui_group",
+        "name": "V-I-F",
+        "tab": "21b6b89367d1044d",
+        "order": 1,
+        "disp": true,
+        "width": "15",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "4b96a68edb6fbe61",
+        "type": "ui_group",
+        "name": "Relay Control",
+        "tab": "21b6b89367d1044d",
+        "order": 2,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "c4dac1cb0d15c9b4",
+        "type": "ui_tab",
+        "name": "DHT22 and Control ",
+        "icon": "dashboard",
+        "order": 4,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "b31b8794de065b02",
+        "type": "ui_group",
+        "name": "Energy and Power",
+        "tab": "21b6b89367d1044d",
+        "order": 3,
+        "disp": true,
+        "width": "18",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "e0878a31cdb55d19",
+        "type": "ui_group",
+        "name": "Humidity Reading",
+        "tab": "c4dac1cb0d15c9b4",
+        "order": 2,
+        "disp": true,
+        "width": "24",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1fecb5e598f33455",
+        "type": "ui_group",
+        "name": "Temperature Reading",
+        "tab": "c4dac1cb0d15c9b4",
+        "order": 1,
+        "disp": true,
+        "width": "24",
+        "collapse": false,
+        "className": "2"
+    },
+    {
+        "id": "e3a793c0b1411431",
+        "type": "ui_tab",
+        "name": "Overview",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "8121ca602df83810",
+        "type": "ui_group",
+        "name": "status",
+        "tab": "e3a793c0b1411431",
+        "order": 1,
+        "disp": true,
+        "width": "48",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "98e8d48125990ba4",
+        "type": "ui_group",
+        "name": "chart",
+        "tab": "e3a793c0b1411431",
+        "order": 2,
+        "disp": true,
+        "width": "48",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "01a42efd6ed45203",
+        "type": "ui_group",
+        "name": "Date_Time",
+        "tab": "e3a793c0b1411431",
+        "order": 3,
+        "disp": true,
+        "width": "48",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "a68df059bf972234",
+        "type": "function",
+        "z": "4351e83dd79a08c7",
+        "name": "function 1",
+        "func": "msg.payload = parseFloat(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 180,
+        "wires": [
+            [
+                "a80241ded46eb5ea",
+                "2e205324f20db78e"
+            ]
+        ]
+    },
+    {
+        "id": "a80241ded46eb5ea",
+        "type": "ui_gauge",
+        "z": "4351e83dd79a08c7",
+        "name": "",
+        "group": "1fecb5e598f33455",
+        "order": 1,
+        "width": "24",
+        "height": "10",
+        "gtype": "gage",
+        "title": "Temperature (°C)",
+        "label": "°C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#0288d1",
+            "#ffc107",
+            "#e53935"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 450,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "2e205324f20db78e",
+        "type": "ui_chart",
+        "z": "4351e83dd79a08c7",
+        "name": "",
+        "group": "e0878a31cdb55d19",
+        "order": 2,
+        "width": "24",
+        "height": "10",
+        "label": "Temperature History",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "50",
+        "removeOlder": "10",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#ff8800",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 460,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c654e0b17bbcd7c4",
+        "type": "function",
+        "z": "4351e83dd79a08c7",
+        "name": "function 2",
+        "func": "msg.payload = parseFloat(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 240,
+        "y": 460,
+        "wires": [
+            [
+                "6556ee209398f804",
+                "942ca143d393d5b7"
+            ]
+        ]
+    },
+    {
+        "id": "6556ee209398f804",
+        "type": "ui_gauge",
+        "z": "4351e83dd79a08c7",
+        "name": "",
+        "group": "e0878a31cdb55d19",
+        "order": 1,
+        "width": "24",
+        "height": "10",
+        "gtype": "gage",
+        "title": "Humidity (%)",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#ffc107",
+            "#00acc1",
+            "#00796b"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 450,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "942ca143d393d5b7",
+        "type": "ui_chart",
+        "z": "4351e83dd79a08c7",
+        "name": "",
+        "group": "1fecb5e598f33455",
+        "order": 2,
+        "width": "24",
+        "height": "10",
+        "label": "Humidity History",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": "10",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#00acc1",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 460,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9c4a0c51bc31c06a",
+        "type": "mqtt in",
+        "z": "4351e83dd79a08c7",
+        "name": "Receive Voltage",
+        "topic": "home/voltage",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "3e3ad694990ba6a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 80,
+        "y": 640,
+        "wires": [
+            [
+                "b762299be8b4db61"
+            ]
+        ]
+    },
+    {
+        "id": "2d10ea2afc771059",
+        "type": "ui_gauge",
+        "z": "4351e83dd79a08c7",
+        "name": "",
+        "group": "0db4acb5f4f3254d",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Gauge Voltage",
+        "label": "VAC",
+        "format": "{{value}}",
+        "min": "80",
+        "max": "260",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 460,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "604548c08d10d7ab",
+        "type": "ui_gauge",
+        "z": "4351e83dd79a08c7",
+        "name": "",
+        "group": "0db4acb5f4f3254d",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Gauge Current",
+        "label": "A",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "5",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 460,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "46b7311032555044",
+        "type": "ui_gauge",
+        "z": "4351e83dd79a08c7",
+        "name": "",
+        "group": "b31b8794de065b02",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Gauge Power",
+        "label": "W",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "500",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 460,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "aa7f4addcd405faf",
+        "type": "ui_text",
+        "z": "4351e83dd79a08c7",
+        "group": "b31b8794de065b02",
+        "order": 1,
+        "width": "5",
+        "height": "3",
+        "name": "",
+        "label": "Text Energy",
+        "format": "{{value}} kWh",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "Arial,Arial,Helvetica,sans-serif",
+        "fontSize": "25",
+        "color": "#fa004b",
+        "x": 690,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "1db8237dc7f6b0a4",
+        "type": "ui_gauge",
+        "z": "4351e83dd79a08c7",
+        "name": "",
+        "group": "b31b8794de065b02",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Gauge Powerfactor",
+        "label": "",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 470,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "89d510447553f951",
+        "type": "ui_gauge",
+        "z": "4351e83dd79a08c7",
+        "name": "",
+        "group": "0db4acb5f4f3254d",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Gauge Frequency",
+        "label": "Hz",
+        "format": "{{value}}",
+        "min": "40",
+        "max": "60",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 470,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "7de2c22392e0d210",
+        "type": "mqtt in",
+        "z": "4351e83dd79a08c7",
+        "name": "Receive Temperature",
+        "topic": "home/temperature",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "3e3ad694990ba6a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 100,
+        "y": 100,
+        "wires": [
+            [
+                "a68df059bf972234"
+            ]
+        ]
+    },
+    {
+        "id": "95193e102d200165",
+        "type": "mqtt in",
+        "z": "4351e83dd79a08c7",
+        "name": "Receive Humidity",
+        "topic": "home/humidity",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "3e3ad694990ba6a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 80,
+        "y": 380,
+        "wires": [
+            [
+                "c654e0b17bbcd7c4"
+            ]
+        ]
+    },
+    {
+        "id": "5ebb75c44bfb3186",
+        "type": "ui_gauge",
+        "z": "4351e83dd79a08c7",
+        "name": "",
+        "group": "4b96a68edb6fbe61",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Gauge energy",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#f11eb8",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 760,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "b762299be8b4db61",
+        "type": "function",
+        "z": "4351e83dd79a08c7",
+        "name": "function 3",
+        "func": "msg.payload = parseFloat(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 640,
+        "wires": [
+            [
+                "2d10ea2afc771059"
+            ]
+        ]
+    },
+    {
+        "id": "fccd47bf291f4b05",
+        "type": "function",
+        "z": "4351e83dd79a08c7",
+        "name": "function 8",
+        "func": "msg.payload = parseFloat(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 940,
+        "wires": [
+            [
+                "1db8237dc7f6b0a4"
+            ]
+        ]
+    },
+    {
+        "id": "3f5280e3917323f0",
+        "type": "function",
+        "z": "4351e83dd79a08c7",
+        "name": "function 7",
+        "func": "msg.payload = parseFloat(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 880,
+        "wires": [
+            [
+                "89d510447553f951"
+            ]
+        ]
+    },
+    {
+        "id": "714376e9aa0a3aa0",
+        "type": "function",
+        "z": "4351e83dd79a08c7",
+        "name": "function 6",
+        "func": "msg.payload = parseFloat(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 820,
+        "wires": [
+            [
+                "aa7f4addcd405faf",
+                "5ebb75c44bfb3186"
+            ]
+        ]
+    },
+    {
+        "id": "b20c9ffaf8754514",
+        "type": "function",
+        "z": "4351e83dd79a08c7",
+        "name": "function 5",
+        "func": "msg.payload = parseFloat(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 760,
+        "wires": [
+            [
+                "46b7311032555044"
+            ]
+        ]
+    },
+    {
+        "id": "44f9440bd74f4fca",
+        "type": "function",
+        "z": "4351e83dd79a08c7",
+        "name": "function 4",
+        "func": "msg.payload = parseFloat(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 700,
+        "wires": [
+            [
+                "604548c08d10d7ab"
+            ]
+        ]
+    },
+    {
+        "id": "8144ecf68444da26",
+        "type": "mqtt in",
+        "z": "4351e83dd79a08c7",
+        "name": "Receive powerfactor",
+        "topic": "home/powerfactor",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "3e3ad694990ba6a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 90,
+        "y": 940,
+        "wires": [
+            [
+                "fccd47bf291f4b05"
+            ]
+        ]
+    },
+    {
+        "id": "20c4dc1c346f77db",
+        "type": "mqtt in",
+        "z": "4351e83dd79a08c7",
+        "name": "Receive frequency",
+        "topic": "home/frequency",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "3e3ad694990ba6a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 90,
+        "y": 880,
+        "wires": [
+            [
+                "3f5280e3917323f0"
+            ]
+        ]
+    },
+    {
+        "id": "8ddc699051f81d41",
+        "type": "mqtt in",
+        "z": "4351e83dd79a08c7",
+        "name": "Receive Energy",
+        "topic": "home/energy",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "3e3ad694990ba6a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 80,
+        "y": 820,
+        "wires": [
+            [
+                "714376e9aa0a3aa0"
+            ]
+        ]
+    },
+    {
+        "id": "b282f5e04e660f40",
+        "type": "mqtt in",
+        "z": "4351e83dd79a08c7",
+        "name": "Receive Power",
+        "topic": "home/power",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "3e3ad694990ba6a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 80,
+        "y": 760,
+        "wires": [
+            [
+                "b20c9ffaf8754514"
+            ]
+        ]
+    },
+    {
+        "id": "5605b160befd759c",
+        "type": "mqtt in",
+        "z": "4351e83dd79a08c7",
+        "name": "Receive Current",
+        "topic": "home/current",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "3e3ad694990ba6a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 80,
+        "y": 700,
+        "wires": [
+            [
+                "44f9440bd74f4fca"
+            ]
+        ]
+    },
+    {
+        "id": "7c0fcf84bac4e331",
+        "type": "ui_button",
+        "z": "08d6fb8f6833d65d",
+        "name": "Button ON",
+        "group": "4b96a68edb6fbe61",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Relay ON",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "ON",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 130,
+        "y": 220,
+        "wires": [
+            [
+                "ddbd942bd44443a1"
+            ]
+        ]
+    },
+    {
+        "id": "0c6c582119e7b0cc",
+        "type": "ui_button",
+        "z": "08d6fb8f6833d65d",
+        "name": "Button OFF",
+        "group": "4b96a68edb6fbe61",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Relay OFF",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "OFF",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 130,
+        "y": 280,
+        "wires": [
+            [
+                "ddbd942bd44443a1"
+            ]
+        ]
+    },
+    {
+        "id": "a81745642e01c9cc",
+        "type": "ui_button",
+        "z": "08d6fb8f6833d65d",
+        "name": "Button TOGGLE",
+        "group": "4b96a68edb6fbe61",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Toggle",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "TOGGLE",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 140,
+        "y": 340,
+        "wires": [
+            [
+                "ddbd942bd44443a1"
+            ]
+        ]
+    },
+    {
+        "id": "ddbd942bd44443a1",
+        "type": "mqtt out",
+        "z": "08d6fb8f6833d65d",
+        "name": "Send Relay Command",
+        "topic": "home/relay/control",
+        "qos": "0",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "3e3ad694990ba6a9",
+        "x": 400,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "1e1a3345cc5a999b",
+        "type": "ui_button",
+        "z": "08d6fb8f6833d65d",
+        "name": "Button Reset PZEM",
+        "group": "b31b8794de065b02",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Reset PZEM Energy",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "RESET",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 140,
+        "y": 460,
+        "wires": [
+            [
+                "ea641585ae9b49b8"
+            ]
+        ]
+    },
+    {
+        "id": "ea641585ae9b49b8",
+        "type": "mqtt out",
+        "z": "08d6fb8f6833d65d",
+        "name": "Send PZEM Reset Command",
+        "topic": "home/pzem/reset",
+        "qos": "0",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "3e3ad694990ba6a9",
+        "x": 470,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "a6ab45193ead5be0",
+        "type": "mqtt in",
+        "z": "6bb65482c629c10d",
+        "name": "Receive Relay Status",
+        "topic": "home/relay/status",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "3e3ad694990ba6a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 160,
+        "wires": [
+            [
+                "25215c56faa98f9c"
+            ]
+        ]
+    },
+    {
+        "id": "25215c56faa98f9c",
+        "type": "function",
+        "z": "6bb65482c629c10d",
+        "name": "Status Parser",
+        "func": "// Parse relay status to boolean\nvar status = msg.payload.toString();\n\nif (status === \"ON\" || status === \"1\") {\n    msg.payload = true;\n    msg.color = \"green\";\n} else if (status === \"OFF\" || status === \"0\") {\n    msg.payload = false;\n    msg.color = \"red\";\n} else {\n    // Handle other status like \"TEMP_PROTECTION_OFF\"\n    msg.payload = false;\n    msg.color = \"orange\";\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 240,
+        "wires": [
+            [
+                "9d5854176f2525ef"
+            ]
+        ]
+    },
+    {
+        "id": "9d5854176f2525ef",
+        "type": "ui_led",
+        "z": "6bb65482c629c10d",
+        "order": 1,
+        "group": "4b96a68edb6fbe61",
+        "width": "6",
+        "height": "3",
+        "label": "Relay Status",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ff0000",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#008000",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "LED Relay Status",
+        "x": 610,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "2de986280bb85019",
+        "type": "mqtt in",
+        "z": "6bb65482c629c10d",
+        "name": "Receive PZEM Reset Status",
+        "topic": "home/pzem/status",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "3e3ad694990ba6a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 380,
+        "wires": [
+            [
+                "54372ca5129748c3"
+            ]
+        ]
+    },
+    {
+        "id": "54372ca5129748c3",
+        "type": "function",
+        "z": "6bb65482c629c10d",
+        "name": "Format PZEM Notification",
+        "func": "// Dựa trên phản hồi từ ESP32, tạo thông báo và đặt msg.topic để điều khiển màu sắc thông báo\nif (msg.payload === \"RESET_OK\") {\n    msg.payload = \"✅ Lệnh Reset Energy đã thực hiện thành công!\";\n    // Dùng msg.topic để đặt loại thông báo (success, warning, error, info)\n    msg.topic = \"success\"; \n} else if (msg.payload === \"RESET_FAIL\") {\n    msg.payload = \"❌ Lỗi: Không thể reset Energy!\";\n    msg.topic = \"error\";\n} else {\n    msg.payload = \"Trạng thái PZEM mới: \" + msg.payload;\n    msg.topic = \"info\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 380,
+        "wires": [
+            [
+                "59b2f610c2275759"
+            ]
+        ]
+    },
+    {
+        "id": "59b2f610c2275759",
+        "type": "ui_toast",
+        "z": "6bb65482c629c10d",
+        "position": "top right",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "PZEM Reset Notification",
+        "x": 670,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "7d997783b326bd7e",
+        "type": "mqtt in",
+        "z": "ac470317e4cc03c6",
+        "name": "Receive Voltage",
+        "topic": "home/voltage",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "3e3ad694990ba6a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 300,
+        "wires": [
+            [
+                "0fb44e36245f68df"
+            ]
+        ]
+    },
+    {
+        "id": "b2fdf8d42c551aec",
+        "type": "mqtt in",
+        "z": "ac470317e4cc03c6",
+        "name": "Receive Relay Status",
+        "topic": "home/relay/status",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "3e3ad694990ba6a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 460,
+        "wires": [
+            [
+                "a440900eb42c1adf"
+            ]
+        ]
+    },
+    {
+        "id": "a440900eb42c1adf",
+        "type": "function",
+        "z": "ac470317e4cc03c6",
+        "name": "relay_status",
+        "func": "var status = msg.payload;\nvar color = (status === \"ON\") ? \"🟢\" : \"🔴\";\nmsg.payload = color + \" \" + status;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 460,
+        "wires": [
+            [
+                "915c646c585f0c60"
+            ]
+        ]
+    },
+    {
+        "id": "6c6f3a7c1f71d7c4",
+        "type": "ui_template",
+        "z": "ac470317e4cc03c6",
+        "group": "8121ca602df83810",
+        "name": "Environment",
+        "order": 1,
+        "width": "16",
+        "height": "6",
+        "format": "<div style=\"\n  background: linear-gradient(145deg, #1e1e1e, #2b2b2b);\n  border-radius: 16px;\n  width: 100%; height: 100%;\n  display: flex; flex-direction: column;\n  justify-content: center; align-items: center;\n  color: #f5f5f5; \n  font-family: 'Segoe UI', Arial, sans-serif;\n  padding: 15px; box-shadow: 0 0 10px rgba(255,255,255,0.1);\n\">\n\n    <div style=\"font-size: 26px; font-weight: 700; color: #F8FF6A; margin-bottom: 10px;\">\n        🌡 Temperature & 💧 Humidity\n    </div>\n\n    <div style=\"font-size: 46px; font-weight: 800; color: #FF7043; line-height: 1;\">\n        {{msg.payload.temperature}} °C\n    </div>\n\n    <div style=\"font-size: 40px; font-weight: 700; color: #00BCD4; line-height: 1.2;\">\n        {{msg.payload.humidity}} %\n    </div>\n\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 750,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2c3c461e5529ae09",
+        "type": "mqtt in",
+        "z": "ac470317e4cc03c6",
+        "name": "Receive Temperature",
+        "topic": "home/temperature",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "3e3ad694990ba6a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 140,
+        "wires": [
+            [
+                "60d756031903af9f"
+            ]
+        ]
+    },
+    {
+        "id": "85baa006da2e5522",
+        "type": "function",
+        "z": "ac470317e4cc03c6",
+        "name": "Environment",
+        "func": "msg.payload = {\n    temperature: msg.payload[\"home/temperature\"],\n    humidity: msg.payload[\"home/humidity\"]\n};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 180,
+        "wires": [
+            [
+                "6c6f3a7c1f71d7c4"
+            ]
+        ]
+    },
+    {
+        "id": "60d756031903af9f",
+        "type": "join",
+        "z": "ac470317e4cc03c6",
+        "name": "join_t_h",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": true,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 410,
+        "y": 180,
+        "wires": [
+            [
+                "85baa006da2e5522"
+            ]
+        ]
+    },
+    {
+        "id": "61d49b1e02510696",
+        "type": "ui_template",
+        "z": "ac470317e4cc03c6",
+        "group": "8121ca602df83810",
+        "name": "P_V_status",
+        "order": 2,
+        "width": "16",
+        "height": "6",
+        "format": "<div style=\"\n  background: linear-gradient(145deg, #1f1f1f, #2d2d2d);\n  border-radius: 16px;\n  width: 100%; height: 100%;\n  display: flex; flex-direction: column;\n  justify-content: center; align-items: center;\n  color: #f5f5f5;\n  font-family: 'Segoe UI', Arial, sans-serif;\n  padding: 15px;\n  box-shadow: 0 0 12px rgba(255,255,255,0.08);\n\">\n\n    <div style=\"font-size: 26px; font-weight: 700; color: #F8FF6A; margin-bottom: 10px;\">\n        ⚡ Power Monitor\n    </div>\n\n    <div style=\"font-size: 48px; font-weight: 800; color: #FF5722; line-height: 1;\">\n        {{msg.payload.power}} <span style=\"font-size: 32px;\">W</span>\n    </div>\n\n    <div style=\"font-size: 38px; font-weight: 700; color: #76FF03; line-height: 1.3;\">\n        {{msg.payload.voltage}} <span style=\"font-size: 28px;\">V</span>\n    </div>\n\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 750,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "668c6e161d473671",
+        "type": "ui_chart",
+        "z": "ac470317e4cc03c6",
+        "name": "",
+        "group": "98e8d48125990ba4",
+        "order": 0,
+        "width": "48",
+        "height": "13",
+        "label": "Power Consumption (60s)",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": "60",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "1",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#fff700",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 570,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "af954cdee283344b",
+        "type": "function",
+        "z": "ac470317e4cc03c6",
+        "name": "power",
+        "func": "msg.payload = parseFloat(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 580,
+        "wires": [
+            [
+                "668c6e161d473671"
+            ]
+        ]
+    },
+    {
+        "id": "fb495dd47431941d",
+        "type": "function",
+        "z": "ac470317e4cc03c6",
+        "name": "pze",
+        "func": "msg.payload = {\n    power: msg.payload[\"home/power\"],\n    voltage: msg.payload[\"home/voltage\"]\n};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 340,
+        "wires": [
+            [
+                "61d49b1e02510696"
+            ]
+        ]
+    },
+    {
+        "id": "0fb44e36245f68df",
+        "type": "join",
+        "z": "ac470317e4cc03c6",
+        "name": "join_p_v",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": true,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 410,
+        "y": 340,
+        "wires": [
+            [
+                "fb495dd47431941d"
+            ]
+        ]
+    },
+    {
+        "id": "915c646c585f0c60",
+        "type": "ui_template",
+        "z": "ac470317e4cc03c6",
+        "group": "8121ca602df83810",
+        "name": "relay_status",
+        "order": 2,
+        "width": "16",
+        "height": "6",
+        "format": "<div style=\"\n  background: linear-gradient(145deg, #1e1e1e, #2b2b2b);\n  border-radius: 16px;\n  width: 100%; height: 100%;\n  display: flex; flex-direction: column;\n  justify-content: center; align-items: center;\n  color: #f5f5f5;\n  font-family: 'Segoe UI', Arial, sans-serif;\n  padding: 15px;\n  box-shadow: 0 0 12px rgba(255,255,255,0.08);\n\">\n\n    <div style=\"font-size: 26px; font-weight: 700; color: #F8FF6A; margin-bottom: 10px;\">\n        🔌 Relay Status\n    </div>\n\n    <div style=\"margin-bottom: 12px;\">\n        <span style=\"\n          display:inline-block;\n          width: 45px; height: 45px;\n          background: {{msg.payload === 'ON' ? '#00FF66' : '#FF1744'}};\n          border-radius: 50%;\n          box-shadow: 0 0 20px {{msg.payload === 'ON' ? 'rgba(0,255,102,0.6)' : 'rgba(255,23,68,0.4)'}};\n          border: 2px solid #fff;\n          transition: all 0.3s ease;\n      \"></span>\n    </div>\n\n    <div style=\"\n      font-size: 36px;\n      font-weight: 800;\n      color: {{msg.payload === 'ON' ? '#00FF66' : '#FF5252'}};\n      text-shadow: 0 0 6px {{msg.payload === 'ON' ? 'rgba(0,255,102,0.5)' : 'rgba(255,82,82,0.5)'}};\n  \">\n        {{msg.payload}}\n    </div>\n\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 650,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d93c7f27098bfae9",
+        "type": "mqtt in",
+        "z": "ac470317e4cc03c6",
+        "name": "Receive Power",
+        "topic": "home/power",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "3e3ad694990ba6a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 580,
+        "wires": [
+            [
+                "af954cdee283344b"
+            ]
+        ]
+    },
+    {
+        "id": "a45b1369d5814467",
+        "type": "mqtt in",
+        "z": "ac470317e4cc03c6",
+        "name": "Receive Power",
+        "topic": "home/power",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "3e3ad694990ba6a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 380,
+        "wires": [
+            [
+                "0fb44e36245f68df"
+            ]
+        ]
+    },
+    {
+        "id": "cd25c747cb9b50ac",
+        "type": "mqtt in",
+        "z": "ac470317e4cc03c6",
+        "name": "Receive Humidity",
+        "topic": "home/humidity",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "3e3ad694990ba6a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 220,
+        "wires": [
+            [
+                "60d756031903af9f"
+            ]
+        ]
+    },
+    {
+        "id": "d731af3d573a9e50",
+        "type": "inject",
+        "z": "ac470317e4cc03c6",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 230,
+        "y": 720,
+        "wires": [
+            [
+                "ee2ed5cac418a9a8"
+            ]
+        ]
+    },
+    {
+        "id": "ee2ed5cac418a9a8",
+        "type": "function",
+        "z": "ac470317e4cc03c6",
+        "name": "read_time",
+        "func": "let now = new Date();\n\n// Lấy thứ trong tuần\nconst days = [\n    \"Chủ nhật\", \"Thứ hai\", \"Thứ ba\", \"Thứ tư\",\n    \"Thứ năm\", \"Thứ sáu\", \"Thứ bảy\"\n];\nlet weekday = days[now.getDay()];\n\n// Định dạng ngày kiểu Việt Nam\nlet dateVN = now.toLocaleDateString(\"vi-VN\"); // dd/mm/yyyy\n\n// Giờ phút giây 24h hoặc 12h\nlet timeVN = now.toLocaleTimeString(\"vi-VN\", {\n    hour: \"2-digit\",\n    minute: \"2-digit\",\n    second: \"2-digit\",\n    hour12: false     // đổi true nếu muốn PM/AM\n});\n\nmsg.payload = {\n    time: timeVN,\n    date: dateVN,\n    weekday: weekday\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 720,
+        "wires": [
+            [
+                "7ac1f25d1b295879"
+            ]
+        ]
+    },
+    {
+        "id": "7ac1f25d1b295879",
+        "type": "ui_template",
+        "z": "ac470317e4cc03c6",
+        "group": "01a42efd6ed45203",
+        "name": "",
+        "order": 0,
+        "width": "48",
+        "height": "4",
+        "format": "<div style=\"\n    width:100%;\n    height:100%;\n    display:flex;\n    flex-direction:column;\n    justify-content:center;\n    align-items:center;\n    padding:15px 0;\n    color:#F8FF6A;\n    font-family:'Segoe UI', Arial, sans-serif;\n\">\n\n    <!-- Giờ -->\n    <div style=\"\n        font-size:44px;\n        font-weight:700;\n        display:flex;\n        align-items:center;\n        gap:12px;\n    \">\n        <span style=\"font-size:38px;\">🕒</span>\n        <span>{{msg.payload.time}}</span>\n    </div>\n\n    <!-- Thứ + ngày -->\n    <div style=\"\n        margin-top:8px;\n        font-size:22px;\n        color:#cccccc;\n        font-weight:400;\n    \">\n        {{msg.payload.weekday}}, {{msg.payload.date}}\n    </div>\n\n</div>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 640,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    }
+]

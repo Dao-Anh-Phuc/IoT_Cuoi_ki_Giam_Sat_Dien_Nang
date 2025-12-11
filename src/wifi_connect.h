@@ -59,3 +59,33 @@ inline void setup_wifi(const char *SSID, const char *PASS)
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
 }
+
+inline void checkWiFiConnection()
+{
+    static unsigned long lastCheck = 0;
+    
+    if (millis() - lastCheck > 30000) {  // Check mỗi 30s
+        lastCheck = millis();
+        
+        if (WiFi.status() != WL_CONNECTED) {
+            Serial.println("WiFi disconnected! Reconnecting...");
+            WiFi.reconnect();
+            
+            // Wait max 10 seconds
+            int timeout = 0;
+            while (WiFi.status() != WL_CONNECTED && timeout < 20) {
+                delay(500);
+                Serial.print(".");
+                timeout++;
+            }
+            
+            if (WiFi.status() == WL_CONNECTED) {
+                Serial.println("\nWiFi reconnected!");
+                Serial.printf("IP: %s, RSSI: %ddBm\n", 
+                             WiFi.localIP().toString().c_str(), WiFi.RSSI());
+            } else {
+                Serial.println("\nWiFi reconnect failed!");
+            }
+        }
+    }
+}
