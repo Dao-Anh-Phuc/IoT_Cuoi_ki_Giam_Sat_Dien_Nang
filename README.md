@@ -93,8 +93,8 @@ Temperature protection (có bảo vệ tải khi quá nhiệt độ)
 System info: heap, RSSI, uptime
 
 ## 🏗️ Kiến trúc hệ thống
-Hình 2: Sơ đồ kiến trúc hệ thống 
-<img width="2160" height="951" alt="Screenshot 2025-12-11 183854" src="https://github.com/user-attachments/assets/b83caf4f-b604-44be-b2a0-e885936b6622" />
+Hình 2.1: Sơ đồ kiến trúc hệ thống (theo khối)
+<img width="2041" height="935" alt="Screenshot 2025-12-11 233625" src="https://github.com/user-attachments/assets/6351b9fd-daba-4061-a4cb-7e0df4106a53" />
 
 Chú thích:
 
@@ -107,6 +107,12 @@ Khối chấp hành: Relay điều khiển đóng/ngắt tải
 MQTT Broker: trung chuyển dữ liệu giữa ESP32 ↔ Node-RED
 
 Node-RED Dashboard: hiển thị dữ liệu & điều khiển từ xa
+
+Hình 2.2: Sơ đồ tổng quan hoạt động của code 
+
+
+<img width="747" height="989" alt="Screenshot 2025-12-12 002309" src="https://github.com/user-attachments/assets/07a17a5b-ca48-4a6b-8bcf-7af5a0b90a9f" />
+
 
 ## 🔧 Sơ đồ mạch
 Hình 3.1: Sơ đồ nguyên lý đầy đủ thực hiện trên Fritzing
