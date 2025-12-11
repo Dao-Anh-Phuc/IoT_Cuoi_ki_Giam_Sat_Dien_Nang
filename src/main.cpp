@@ -661,7 +661,7 @@ void setup()
     Serial.printf("   Temp Check: %dms\n", TEMP_CHECK_INTERVAL);  
     
     Serial.println("════════════════════════════════════════");
-    Serial.println("🌡️  Temperature Protection:");
+    Serial.println("  Temperature Protection:");
     Serial.printf("   Threshold: %.1f°C\n", TEMP_THRESHOLD);
     Serial.printf("   Hysteresis: %.1f°C\n", TEMP_HYSTERESIS);
     Serial.printf("   Auto OFF when T > %.1f°C\n", TEMP_THRESHOLD);
