@@ -74,11 +74,11 @@ Response time: < 8s
 
 LCD 16x2 — hiển thị luân phiên Voltage/Current, Power/Energy, Temp/Humidity
 
-Reset năng lượng PZEM bằng nút nhấn
+Reset năng lượng PZEM bằng nút nhấn và có thể thông qua giao diện trên dashboard
 
-Điều khiển relay qua MQTT
+Điều khiển relay qua MQTT 
 
-Auto-reconnect WiFi & MQTT
+Auto-reconnect WiFi & MQTT 
 
 ☁️ Cloud & Dashboard
 
@@ -88,7 +88,7 @@ Last Will Testament (LWT)
 
 Node-RED real-time graph, gauge, switch
 
-Temperature protection
+Temperature protection (có bảo vệ tải khi quá nhiệt độ)
 
 System info: heap, RSSI, uptime
 
@@ -189,14 +189,25 @@ Node.js: v20.19.5
 
 Dashboard UI: node-red-dashboard
 
-✔ Hình 8: Dashboard hiển thị real-time
+✔ Hình 8.1: Dashboard hiển thị real-time -1
 
-(Chèn ảnh Node-RED vào đây)
+<img width="2039" height="1216" alt="Screenshot 2025-12-11 231956" src="https://github.com/user-attachments/assets/9f738893-ffd1-4b30-8770-9d7fe1afc125" />
 
-## 🎥 Demo Video
+
+✔ Hình 8.2: Dashboard hiển thị real-time -2
+
+<img width="2164" height="1168" alt="Screenshot 2025-12-11 232012" src="https://github.com/user-attachments/assets/78014f4c-4c4a-46ca-9896-d171f941a7fc" />
+
+
+## 🎥 Demo Video và hình ảnh demo
+
+Hình 9: Chạy với quạt là tải 
+
+<img width="960" height="1280" alt="image" src="https://github.com/user-attachments/assets/877d7a07-389a-4422-8d07-568591fc89e9" />
+
 
 ▶ Xem video demo đầy đủ tại:
-👉 (Thêm link Google Drive hoặc YouTube)
+https://drive.google.com/drive/folders/18y1VxEVjbnSewBJiIceqecjl6ZEWsht0?usp=sharing
 
 ## 🐛 Troubleshooting
 1️⃣ LCD hiển thị lỗi
