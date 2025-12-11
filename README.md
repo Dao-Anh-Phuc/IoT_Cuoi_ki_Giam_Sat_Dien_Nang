@@ -3,6 +3,7 @@
 # Hệ thống giám sát năng lượng thông minh với ESP32, SHT31, PZEM-004T, LCD 16X2, Relay, MQTT Cloud và Node-RED Dashboard
 
 ## 📋 Mục lục
+📝 Đặt vấn đề
 
 🎯 Giới thiệu
 
@@ -25,6 +26,12 @@
 📚 Tài liệu tham khảo
 
 👨‍💻 Tác giả
+
+## 📝 Đặt vấn đề
+
+Trong bối cảnh nhu cầu sử dụng điện ngày càng tăng, việc giám sát và quản lý năng lượng trở thành yếu tố quan trọng nhằm tối ưu hiệu suất và giảm thất thoát. Các phương pháp đo đạc truyền thống thường thiếu khả năng cập nhật theo thời gian thực và khó tích hợp vào hệ thống IoT hiện đại. Vì vậy, việc xây dựng một mô hình giám sát điện năng từ xa, có khả năng thu thập dữ liệu chính xác, hiển thị trực quan và điều khiển thiết bị thông minh là yêu cầu cấp thiết trong nhiều ứng dụng dân dụng lẫn công nghiệp.
+
+Dự án này được phát triển để đáp ứng các yêu cầu đó bằng cách kết hợp cảm biến PZEM, vi điều khiển ESP32 và nền tảng IoT. Bên cạnh chức năng giám sát, hệ thống còn được tích hợp khả năng ngắt tự động (tự động điều khiển relay khi phát hiện các điều kiện bất thường như quá tải hoặc tiêu thụ vượt ngưỡng). Tính năng này giúp nâng cao mức độ an toàn, giảm rủi ro hư hỏng thiết bị và hỗ trợ quản lý năng lượng hiệu quả hơn.
 
 ## 🎯 Giới thiệu
 
