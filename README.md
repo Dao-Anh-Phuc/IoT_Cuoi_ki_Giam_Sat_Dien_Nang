@@ -1,6 +1,6 @@
 📊 IoT Smart Energy Monitoring System with MQTT & Node-RED
 
-Hệ thống giám sát năng lượng thông minh với ESP32, SHT31, PZEM-004T, MQTT Cloud và Node-RED Dashboard
+Hệ thống giám sát năng lượng thông minh với ESP32, SHT31, PZEM-004T, LCD 16X2, Relay, MQTT Cloud và Node-RED Dashboard
 
 ## 📋 Mục lục
 
@@ -109,12 +109,15 @@ MQTT Broker: trung chuyển dữ liệu giữa ESP32 ↔ Node-RED
 Node-RED Dashboard: hiển thị dữ liệu & điều khiển từ xa
 
 ## 🔧 Sơ đồ mạch
-Hình 3: Sơ đồ nguyên lý đầy đủ thực hiện trên Fritzing
+Hình 3.1: Sơ đồ nguyên lý đầy đủ thực hiện trên Fritzing
 <img width="2248" height="974" alt="Screenshot 2025-12-11 190727" src="https://github.com/user-attachments/assets/52d9bb47-4bdb-4646-8dab-3f0ae2fca1eb" />
+
 Hình 3.2: Sơ đồ nguyên lý đầy đủ thực hiện trên KiCad
 <img width="901" height="1014" alt="Screenshot 2025-12-11 120752" src="https://github.com/user-attachments/assets/7a3aaa61-e624-414e-bc14-96303d5d4df6" />
+
 Hình 4: PCB Layout thực hiện trên KiCad
 <img width="540" height="657" alt="Screenshot 2025-12-11 120809" src="https://github.com/user-attachments/assets/7bc55156-0b4a-463d-ae9a-c56c1a2c7d13" />
+
 Hình 5: Mạch hoàn thiện sau khi hàn linh kiện
 <img width="2568" height="1926" alt="image" src="https://github.com/user-attachments/assets/c3cab5bc-79a2-4162-be97-c3c237e6c51a" />
 
