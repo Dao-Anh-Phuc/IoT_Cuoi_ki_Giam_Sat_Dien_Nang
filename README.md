@@ -1,6 +1,6 @@
-📊 IoT Smart Energy Monitoring System with MQTT & Node-RED
+## 📊 IoT Smart Energy Monitoring System with MQTT & Node-RED
 
-Hệ thống giám sát năng lượng thông minh với ESP32, SHT31, PZEM-004T, LCD 16X2, Relay, MQTT Cloud và Node-RED Dashboard
+# Hệ thống giám sát năng lượng thông minh với ESP32, SHT31, PZEM-004T, LCD 16X2, Relay, MQTT Cloud và Node-RED Dashboard
 
 ## 📋 Mục lục
 
