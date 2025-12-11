@@ -112,14 +112,35 @@ Node-RED Dashboard: hiển thị dữ liệu & điều khiển từ xa
 Hình 3.1: Sơ đồ nguyên lý đầy đủ thực hiện trên Fritzing
 <img width="2248" height="974" alt="Screenshot 2025-12-11 190727" src="https://github.com/user-attachments/assets/52d9bb47-4bdb-4646-8dab-3f0ae2fca1eb" />
 
+Chú thích:
+Cấu hình chân (Pin Configuration)
+
+LED_RESET_PIN (GPIO 5): Chân điều khiển LED dùng để báo hiệu khi thực hiện thao tác reset PZEM.
+
+RELAY_PIN (GPIO 18): Chân điều khiển relay, hoạt động ở mức logic LOW để kích hoạt.
+
+BUTTON_PIN (GPIO 23): Chân kết nối nút nhấn, sử dụng để reset chỉ số năng lượng.
+
+SHT31_SDA (GPIO 21): Chân SDA cho giao tiếp I2C với cảm biến nhiệt độ – độ ẩm SHT31.
+
+SHT31_SCL (GPIO 22): Chân SCL cho giao tiếp I2C với cảm biến SHT31.
+
+PZEM_RX (GPIO 26): Chân nhận dữ liệu (RX) từ module đo điện PZEM-004T.
+
+PZEM_TX (GPIO 27): Chân truyền dữ liệu (TX) đến module PZEM-004T.
+
 Hình 3.2: Sơ đồ nguyên lý đầy đủ thực hiện trên KiCad
-<img width="901" height="1014" alt="Screenshot 2025-12-11 120752" src="https://github.com/user-attachments/assets/7a3aaa61-e624-414e-bc14-96303d5d4df6" />
+<img width="1030" height="1154" alt="image" src="https://github.com/user-attachments/assets/3fe5eed9-16d1-4947-94f3-23e72ac7d67a" />
+
 
 Hình 4: PCB Layout thực hiện trên KiCad
 
 
-<img width="540" height="657" alt="Screenshot 2025-12-11 120809" src="https://github.com/user-attachments/assets/7bc55156-0b4a-463d-ae9a-c56c1a2c7d13" />
+<img width="583" height="701" alt="Screenshot 2025-12-11 222242" src="https://github.com/user-attachments/assets/9b1ae63f-7d4c-4c41-9938-a73bb56fe15c" />
 
+
+Lưu ý: Chúng ta lên cách ly nguồn 220V ra khỏi mạch
+       Có thể dùng nguồn chung 220V hạ xuống 5V cấp cho vi điều khiển nhưng không an toàn
 
 Hình 5: Mạch hoàn thiện sau khi hàn linh kiện
 <img width="2568" height="1926" alt="image" src="https://github.com/user-attachments/assets/c3cab5bc-79a2-4162-be97-c3c237e6c51a" />
@@ -148,7 +169,7 @@ Git
 
 Node-RED (tùy chọn cho Dashboard)
 
-📦 Thư viện sử dụng (PlatformIO)
+📦 Thư viện sử dụng (PlatformIO) dùng cho dự án 
 
 PubSubClient@^2.8 — MQTT
 
@@ -160,7 +181,7 @@ Adafruit SHT31 Library@^2.2.2
 
 LiquidCrystal_I2C@^1.1.4
 
-## 📊 Node-RED Dashboard
+## 📊 Node-RED Dashboard (Giao diện hiển thị) 
 
 Node-RED: v4.1.0
 
