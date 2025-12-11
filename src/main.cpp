@@ -42,6 +42,7 @@ namespace
     Ticker lcdTicker;
     Ticker ledBlinkTicker;
     Ticker systemInfoTicker;
+    Ticker tempCheckTicker;  
     
     // State Variables
     bool relayState = false;
@@ -61,6 +62,9 @@ namespace
     bool last_relay_state = false;
     
     int currentSystemInfoIndex = 0;
+    
+    bool relayOffByOverTemp = false;     // Relay bị tắt do quá nhiệt
+    bool wasRelayOnBeforeTrip = false;   // Trạng thái relay trước khi trip
     
     // Display Data Struct
     struct DisplayData {
@@ -92,6 +96,7 @@ void resetPzemEnergy();
 void handleButton();
 void mqttCallback(char *topic, uint8_t *payload, unsigned int length);
 void scanI2C();
+void checkTemperatureProtection();  
 
 // LED Blink Callback (cho PZEM reset indicator)
 void ledBlinkCallback()
@@ -118,7 +123,7 @@ void startLedResetIndicator()
 // Scan I2C Devices (Debug)
 void scanI2C()
 {
-    Serial.println("🔍 Scanning I2C bus...");
+    Serial.println("Scanning I2C bus...");
     byte count = 0;
     
     for (byte i = 8; i < 120; i++)
@@ -142,10 +147,98 @@ void scanI2C()
     }
     
     if (count == 0) {
-        Serial.println("   No I2C devices found!");
-        Serial.printf("   Check wiring: SDA=GPIO%d, SCL=GPIO%d\n", SHT31_SDA, SHT31_SCL);
+        Serial.println("No I2C devices found!");
+        Serial.printf("Check wiring: SDA=GPIO%d, SCL=GPIO%d\n", SHT31_SDA, SHT31_SCL);
     } else {
-        Serial.printf("   Total: %d device(s) found\n", count);
+        Serial.printf("Total: %d device(s) found\n", count);
+    }
+}
+
+void checkTemperatureProtection()
+{
+    float currentTemp = displayData.temperature;
+    
+    // Skip nếu temperature không hợp lệ
+    if (isnan(currentTemp) || currentTemp < -40 || currentTemp > 125) {
+        return;
+    }
+    
+    // ════════════════════════════════════════
+    // CASE 1: Nhiệt độ QUÁ NGƯỠNG
+    // ════════════════════════════════════════
+    if (currentTemp > TEMP_THRESHOLD)
+    {
+        if (relayState == true)  // Relay đang ON
+        {
+            Serial.println("════════════════════════════════════════");
+            Serial.printf("OVER TEMPERATURE PROTECTION!\n");
+            Serial.printf("   Current: %.1f°C > Threshold: %.1f°C\n", 
+                         currentTemp, TEMP_THRESHOLD);
+            Serial.println("AUTO TURNING RELAY OFF!");
+            Serial.println("════════════════════════════════════════");
+            
+            // Lưu trạng thái trước khi tắt
+            wasRelayOnBeforeTrip = true;
+            relayOffByOverTemp = true;
+            
+            // Tắt relay (gọi function có sẵn)
+            updateRelayStats();
+            relayState = false;
+            displayData.relayState = false;
+            digitalWrite(RELAY_PIN, HIGH); // Active LOW - OFF
+            
+            // Publish status
+            mqttClient.publish(MQTTTopics::RELAY_STATUS, "OFF", true);
+            mqttClient.publish(MQTTTopics::RELAY_EVENT, "OFF:OVER_TEMP", false);
+            
+            last_relay_state = relayState;
+            
+            // Hiển thị LCD
+            lcd.clear();
+            lcd.setCursor(0, 0);
+            lcd.print("OVER TEMP!");
+            lcd.setCursor(0, 1);
+            lcd.printf("%.1fC RELAY OFF", currentTemp);
+        }
+    }
+    
+    // ════════════════════════════════════════
+    // CASE 2: Nhiệt độ TRỞ VỀ AN TOÀN
+    // ════════════════════════════════════════
+    else if (currentTemp < (TEMP_THRESHOLD - TEMP_HYSTERESIS))
+    {
+        if (relayOffByOverTemp && wasRelayOnBeforeTrip)
+        {
+            Serial.println("════════════════════════════════════════");
+            Serial.printf("Temperature back to safe level\n");
+            Serial.printf("Current: %.1f°C < %.1f°C\n", 
+                         currentTemp, TEMP_THRESHOLD - TEMP_HYSTERESIS);
+            Serial.println("AUTO TURNING RELAY ON!");
+            Serial.println("════════════════════════════════════════");
+            
+            // Bật relay trở lại
+            updateRelayStats();
+            relayState = true;
+            displayData.relayState = true;
+            digitalWrite(RELAY_PIN, LOW); // Active LOW - ON
+            
+            // Publish status
+            mqttClient.publish(MQTTTopics::RELAY_STATUS, "ON", true);
+            mqttClient.publish(MQTTTopics::RELAY_EVENT, "ON:TEMP_RECOVERED", false);
+            
+            last_relay_state = relayState;
+            
+            // Reset flags
+            relayOffByOverTemp = false;
+            wasRelayOnBeforeTrip = false;
+            
+            // Hiển thị LCD
+            lcd.clear();
+            lcd.setCursor(0, 0);
+            lcd.print("TEMP RECOVERED");
+            lcd.setCursor(0, 1);
+            lcd.printf("%.1fC RELAY ON", currentTemp);
+        }
     }
 }
 
@@ -363,6 +456,11 @@ void controlRelay(bool state)
     mqttClient.publish(MQTTTopics::RELAY_EVENT, event.c_str(), false);
     
     last_relay_state = relayState;
+    
+    if (state == false) {
+        relayOffByOverTemp = false;
+        wasRelayOnBeforeTrip = false;
+    }
 
     Serial.printf("Relay: %s\n", relayState ? "ON" : "OFF");
 }
@@ -415,7 +513,7 @@ void resetPzemEnergy()
     }
 }
 
-// Handle Button Press (with debounce)
+// Handle Button Press
 void handleButton()
 {
     bool reading = digitalRead(BUTTON_PIN);
@@ -525,7 +623,7 @@ void setup()
     Serial.printf("Button: GPIO%d\n", BUTTON_PIN);
     Serial.printf("PZEM: Serial2 (RX=GPIO%d, TX=GPIO%d)\n", PZEM_RX, PZEM_TX);
     
-    // WiFi Setup
+    // WiFi Setup 
     Serial.println("════════════════════════════════════════");
     setup_wifi(ssid, password);
     
@@ -551,6 +649,7 @@ void setup()
     pzemTicker.attach_ms(PZEM_READ_INTERVAL, pzemReadPublish);
     lcdTicker.attach_ms(LCD_UPDATE_INTERVAL, updateLCD);
     systemInfoTicker.attach_ms(SYSTEM_INFO_INTERVAL, publishSystemInfoByIndex);
+    tempCheckTicker.attach_ms(TEMP_CHECK_INTERVAL, checkTemperatureProtection);  
     
     Serial.println("════════════════════════════════════════");
     Serial.println("Ticker Intervals:");
@@ -559,6 +658,15 @@ void setup()
     Serial.printf("   LCD: %dms\n", LCD_UPDATE_INTERVAL);
     Serial.printf("   System Info: %dms\n", SYSTEM_INFO_INTERVAL);
     Serial.printf("   Relay Stats: %dms\n", RELAY_STATS_INTERVAL);
+    Serial.printf("   Temp Check: %dms\n", TEMP_CHECK_INTERVAL);  
+    
+    Serial.println("════════════════════════════════════════");
+    Serial.println("🌡️  Temperature Protection:");
+    Serial.printf("   Threshold: %.1f°C\n", TEMP_THRESHOLD);
+    Serial.printf("   Hysteresis: %.1f°C\n", TEMP_HYSTERESIS);
+    Serial.printf("   Auto OFF when T > %.1f°C\n", TEMP_THRESHOLD);
+    Serial.printf("   Auto ON when T < %.1f°C (if was ON before)\n", 
+                  TEMP_THRESHOLD - TEMP_HYSTERESIS);
     
     Serial.println("════════════════════════════════════════");
     Serial.println("System ready!");

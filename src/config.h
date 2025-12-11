@@ -37,3 +37,7 @@
 
 #define LED_BLINK_TOTAL 6            // Total blinks for reset indicator
 #define LED_BLINK_INTERVAL 300       // Blink interval (ms)
+
+#define TEMP_THRESHOLD              35.0f    // °C - Ngưỡng nhiệt độ tự động tắt relay
+#define TEMP_HYSTERESIS            2.0f     // °C - Độ trễ bật lại (bật khi T < threshold - hysteresis)
+#define TEMP_CHECK_INTERVAL        2000     // ms - Kiểm tra nhiệt độ mỗi 2s
